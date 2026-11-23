@@ -32,7 +32,7 @@ pipeline {
           sh 'docker stop todo_container'
 
           // Remove the container
-          echo 'Removing container...'
+          echo 'Removing container....'
           sh 'docker rm todo_container'
         }
       }
