@@ -29,33 +29,19 @@ pipeline {
             }
         }
 
-       stage('Build') {
-    agent {
-        docker {
-            image 'python:3.9-slim'
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.9-slim'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh 'pip install django==3.2'
+                sh 'python3 manage.py check'
+                echo 'Build checks completed.'
+            }
         }
-    }
-
-    steps {
-        echo 'Installing Django dependencies...'
-
-        sh '''
-            export HOME="$WORKSPACE"
-            export PYTHONUSERBASE="$WORKSPACE/.python"
-            export PATH="$PYTHONUSERBASE/bin:$PATH"
-
-            python3 -m pip install --user django==3.2
-
-            echo "Checking Django installation..."
-            python3 -m django --version
-
-            echo "Checking Django project..."
-            python3 manage.py check
-        '''
-
-        echo 'Django build completed successfully!'
-    }
-}
 
         stage('Deploy') {
             when {
